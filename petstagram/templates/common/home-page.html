@@ -1,9 +1,11 @@
+{% load static %}
+
 <!DOCTYPE html>
 <html lang="en">
 <!-- Starts Head Section -->
 <head>
-    <link rel="stylesheet" href="/static/css/styles.css">
-    <link rel="icon" type="image/x-icon" href="/static/images/free-30-instagram-stories-icons23_122570.png">
+    <link rel="stylesheet" href="{% static '/css/styles.css' %}">
+    <link rel="icon" type="image/x-icon" href="{% static '/images/free-30-instagram-stories-icons23_122570.png' %}">
     <title>Petstagram</title>
 </head>
 <!-- End Head Section -->
@@ -18,7 +20,7 @@
             <div class="logo">
                 <!-- Link to Home Page -->
                 <a href="#">
-                    <img width="50px" src="/static/images/free-30-instagram-stories-icons23_122570.png" alt="img1">
+                    <img width="50px" src="{% static '/images/free-30-instagram-stories-icons23_122570.png' %}" alt="img1">
                 </a>
 
                 <!-- Link to Home Page -->
@@ -87,7 +89,7 @@
             <form class="searchbar" method="post">
                 <input type="text" placeholder="Search by pet name...">
                 <button>
-                    <img src="/static/images/search.png" height="18" alt="img2">
+                    <img src="{% static '/images/search.png' %}" height="18" alt="img2">
                 </button>
             </form>
             <!-- End Searchbar Form -->

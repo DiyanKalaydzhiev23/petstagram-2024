@@ -1,9 +1,11 @@
+{% load static %}
+
 <!DOCTYPE html>
 <html lang="en">
 <!-- Starts Head Section -->
 <head>
-    <link rel="stylesheet" href="/static/css/styles.css">
-    <link rel="icon" type="image/x-icon" href="/static/images/free-30-instagram-stories-icons23_122570.png">
+    <link rel="stylesheet" href="{% static '/css/styles.css' %}">
+    <link rel="icon" type="image/x-icon" href="{% static 'images/free-30-instagram-stories-icons23_122570.png' %}">
     <title>Petstagram</title>
 </head>
 <!-- End Head Section -->
@@ -18,7 +20,7 @@
             <div class="logo">
                 <!-- Link to Home Page -->
                 <a href="#">
-                    <img width="50px" src="/static/images/free-30-instagram-stories-icons23_122570.png" alt="img1">
+                    <img width="50px" src="{% static '/images/free-30-instagram-stories-icons23_122570.png' %}" alt="img1">
                 </a>
                 <!-- Link to Home Page -->
                 <a class="home" href="#">
@@ -77,7 +79,7 @@
 <main>
     <!-- 404 page -->
     <div class="not-found-img">
-        <img src="/static/images/zillow-404-page-5f3ed6a6abaa5.gif" alt="404 not found gif">
+        <img src="{% static '/images/zillow-404-page-5f3ed6a6abaa5.gif' %}" alt="404 not found gif">
     </div>
 
     <div class="not-found">
