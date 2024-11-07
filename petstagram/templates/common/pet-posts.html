@@ -4,19 +4,25 @@
     <div class="top">
         <!-- User Details and image location -->
         <div class="userDetails">
-            <a href="profile details">
+            <a href="{% url 'profile-details' photo.user.pk %}">
                 <div class="profilepic">
                     <div class="profile_img">
-                        <div class="image">
-                            <img src="/static/images/person.png" alt="img8">
-                        </div>
+                        {% if photo.user.profile.profile_picture %}
+                             <div class="image">
+                                <img src="{{ photo.user.profile.profile_picture }}" alt="img8">
+                            </div>
+                        {% else %}
+                            <div class="image">
+                                <img src="{% static 'images/person.png' %}" alt="img8">
+                            </div>
+                        {% endif %}
                     </div>
                 </div>
             </a>
             <h3>
-                <a href="profile details">
+                <a href="{% url 'profile-details' photo.user.pk %}">
                     <!-- if user has first name and last name -->
-                    Diyan Kalaydzhiev
+                    {{ photo.user.profile.get_full_name }}
                     <!-- else -->
                     <!-- user username -->
                 </a>
@@ -26,21 +32,21 @@
                     <span>{{ photo.location }}</span>
                 {% endif %}
                 
-                {% if photo_page %}
-                <div class="edit-delete-btns">
-    
-                    <!-- Link to Edit Pet Photo Page -->
-                    <a href="{% url 'photo-edit' photo.pk %}">
-                        <img class="edit-img" src="{% static '/images/edit-pen-icon-6.jpg' %}"
-                             alt="edit button">
-                    </a>
-    
-                    <!-- Link to Delete Pet Photo Page -->
-                    <a href="{% url 'photo-delete' photo.pk %}">
-                        <img class="bin-img" src="{% static '/images/icon-remove-22.jpg' %}"
-                             alt="bin button">
-                    </a>
-                </div>
+                {% if photo_page and request.user.pk == photo.user.pk %}
+                    <div class="edit-delete-btns">
+        
+                        <!-- Link to Edit Pet Photo Page -->
+                        <a href="{% url 'photo-edit' photo.pk %}">
+                            <img class="edit-img" src="{% static '/images/edit-pen-icon-6.jpg' %}"
+                                 alt="edit button">
+                        </a>
+        
+                        <!-- Link to Delete Pet Photo Page -->
+                        <a href="{% url 'photo-delete' photo.pk %}">
+                            <img class="bin-img" src="{% static '/images/icon-remove-22.jpg' %}"
+                                 alt="bin button">
+                        </a>
+                    </div>
                 {% endif %}
             </h3>
         </div>
@@ -58,7 +64,7 @@
             <div class="left">
                     <span class="heart">
                         <a href="{% url 'like' photo.pk %}">
-                          {% if photo.like_set.all %}
+                          {% if photo.has_liked %}
                               <i class="fa-solid fa-heart" style="color: #ed4040;"></i>
                            {% else %}
                                <i class="fa-regular fa-heart"></i>
@@ -79,7 +85,7 @@
 
         {% for pet in photo.tagged_pets.all %}
             <!-- Link to First Tagged Pet Details Page-->
-            <a href="{% url 'pet-details' "username" pet.slug %}">
+            <a href="{% url 'pet-details' photo.user.profile.get_full_name pet.slug %}">
                 <p class="message">
                     <b>{{ pet.name }}</b>
                 </p>
@@ -107,14 +113,18 @@
                                 <div class="profile_img">
                                     <div class="image">
                                         <!-- User Profile Image -->
-                                        <img src="{% static 'images/person.png' %}" alt="img8">
+                                        {% if comment.user.profile.profile_picture %}
+                                            <img src="{{ comment.user.profile.profile_picture }}" alt="img8">
+                                        {% else %}
+                                            <img src="{% static 'images/person.png' %}" alt="img8">
+                                        {% endif %}
                                     </div>
                                 </div>
                             </div>
                             <p>
                                 <!-- Link to User Profile Details Page-->
                                 <!-- User First and/or Last Name or username-->
-                                <a href="">Steven Ivanov</a>
+                                <a href="{% url 'profile-details' comment.user.pk %}">{{ comment.user.profile.get_full_name }}</a>
                                 <!-- User Comment -->
                                 {{ comment.text }}
                             </p>

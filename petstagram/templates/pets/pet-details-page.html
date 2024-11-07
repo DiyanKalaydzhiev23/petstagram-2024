@@ -18,6 +18,7 @@
                          <!-- Pet Name -->
                         <p>{{ pet.name }}</p>
                         <!-- Pet Edit Button -->
+                        {% if request.user == pet.user %}
                         <a href="{% url 'edit-pet' "username" pet.slug %}">
                             <img class="edit-img" src="/static/images/edit-pen-icon-6.jpg" alt="edit button">
                         </a>
@@ -25,6 +26,7 @@
                         <a href="{% url 'delete-pet' "username" pet.slug %}">
                             <img class="bin-img" src="/static/images/icon-remove-22.jpg" alt="bin button">
                         </a>
+                        {% endif %}
                     </div>
                     <div class="data">
                         <!-- Pet Total Photos -->

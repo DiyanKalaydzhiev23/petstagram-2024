@@ -12,6 +12,8 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 
 from pathlib import Path
 
+from django.urls import reverse_lazy
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -25,7 +27,15 @@ SECRET_KEY = 'django-insecure-5hfl3*4yfz^8uqg&mj9w6t@hz14ef9rt4i3chuo2z76vd+52o^
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = [
+    "gator-causal-monthly.ngrok-free.app",
+    "localhost",
+]
+
+CSRF_TRUSTED_ORIGINS = [
+    "https://gator-causal-monthly.ngrok-free.app",
+    "https://127.0.0.1",
+]
 
 
 # Application definition
@@ -141,3 +151,6 @@ MEDIA_ROOT = BASE_DIR / 'mediafiles/'
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+AUTH_USER_MODEL = 'accounts.AppUser'
+LOGIN_REDIRECT_URL = reverse_lazy('home')
+LOGOUT_REDIRECT_URL = reverse_lazy('login')

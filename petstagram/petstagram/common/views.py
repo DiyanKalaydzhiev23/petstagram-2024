@@ -1,3 +1,4 @@
+from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.shortcuts import render, redirect, resolve_url
 from django.views.generic import ListView
@@ -12,13 +13,18 @@ class HomePage(ListView):
     model = Photo
     template_name = 'common/home-page.html'
     context_object_name = 'all_photos'  # by default is object_list and photos
-    paginate_by = 1
+    paginate_by = 10
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
 
         context['comment_form'] = CommentForm()
         context['search_form'] = SearchForm(self.request.GET)
+
+        user = self.request.user
+
+        for photo in context['all_photos']:
+            photo.has_liked = photo.like_set.filter(user=user).exists() if user.is_authenticated else False
 
         return context
 
@@ -33,41 +39,18 @@ class HomePage(ListView):
 
         return queryset  # Return the new queryset
 
-#
-# def home_page(request):
-#     all_photos = Photo.objects.all()
-#     comment_form = CommentForm()
-#     search_form = SearchForm(request.GET)
-#
-#     if search_form.is_valid():
-#         all_photos = all_photos.filter(
-#             tagged_pets__name__icontains=search_form.cleaned_data['pet_name']
-#         )
-#
-#     photos_per_page = 1
-#     paginator = Paginator(all_photos, photos_per_page)
-#     page_number = request.GET.get('page')  # http://localhost:8000/?page=10 => GET {'page': 10}
-#
-#     all_photos = paginator.get_page(page_number)
-#
-#     context = {
-#         'all_photos': all_photos,
-#         'comment_form': comment_form,
-#         'search_form': search_form,
-#     }
-#
-#     return render(request, 'common/home-page.html', context)
 
-
+@login_required
 def likes_functionality(request, photo_id: int):
     liked_object = Like.objects.filter(
-        to_photo_id=photo_id
+        to_photo_id=photo_id,
+        user=request.user
     ).first()
 
     if liked_object:
         liked_object.delete()
     else:
-        like = Like(to_photo_id=photo_id)
+        like = Like(to_photo_id=photo_id, user=request.user)
         like.save()
 
     return redirect(request.META.get('HTTP_REFERER') + f'#{photo_id}')
@@ -79,7 +62,7 @@ def share_functionality(request, photo_id: int):
 
     return redirect(request.META.get('HTTP_REFERER') + f'#{photo_id}')
 
-
+@login_required
 def comment_functionality(request, photo_id: int):
     if request.POST:
         photo = Photo.objects.get(pk=photo_id)
@@ -88,6 +71,7 @@ def comment_functionality(request, photo_id: int):
         if comment_form.is_valid():
             comment = comment_form.save(commit=False)
             comment.to_photo = photo
+            comment.user = request.user
             comment.save()
 
         return redirect(request.META.get('HTTP_REFERER') + f'#{photo_id}')
