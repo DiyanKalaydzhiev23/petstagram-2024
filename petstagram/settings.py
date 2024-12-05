@@ -9,9 +9,10 @@ https://docs.djangoproject.com/en/5.1/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.1/ref/settings/
 """
-
+import os
 from pathlib import Path
 
+from decouple import config
 from django.urls import reverse_lazy
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -22,20 +23,15 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-5hfl3*4yfz^8uqg&mj9w6t@hz14ef9rt4i3chuo2z76vd+52o^'
+SECRET_KEY = os.getenv('SECRET_KEY', config('SECRET_KEY'))
+# django-insecure-5hfl3*4yfz^8uqg&mj9w6t@hz14ef9rt4i3chuo2z76vd+52o^
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = os.getenv('DEBUG', config('DEBUG')) == "True"
 
-ALLOWED_HOSTS = [
-    "gator-causal-monthly.ngrok-free.app",
-    "localhost",
-]
+ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', config('ALLOWED_HOSTS')).split(',')
 
-CSRF_TRUSTED_ORIGINS = [
-    "https://gator-causal-monthly.ngrok-free.app",
-    "https://127.0.0.1",
-]
+CSRF_TRUSTED_ORIGINS = os.getenv('CSRF_TRUSTED_ORIGINS', config('CSRF_TRUSTED_ORIGINS', [])).split(',')
 
 
 # Application definition
@@ -95,11 +91,11 @@ WSGI_APPLICATION = 'petstagram.wsgi.application'
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.postgresql",
-        "NAME": "petstagram_app",
-        "USER": "postgres",
-        "PASSWORD": "admin",
-        "HOST": "127.0.0.1",
-        "PORT": "5432",
+        "NAME": os.getenv('DB_NAME', config('DB_NAME')),
+        "USER": os.getenv('DB_USER', config('DB_USER')),
+        "PASSWORD": os.getenv('DB_PASS', config('DB_PASS')),
+        "HOST": os.getenv('DB_HOST', config('DB_HOST')),
+        "PORT": os.getenv('DB_PORT', config('DB_PORT')),
     }
 }
 
