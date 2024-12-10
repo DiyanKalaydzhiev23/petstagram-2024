@@ -45,7 +45,6 @@ class ProfileDetailView(LoginRequiredMixin, DetailView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-
         photos_with_likes = self.object.photo_set.annotate(likes_count=Count('like'))
 
         context['total_likes_count'] = sum(photo.likes_count for photo in photos_with_likes)
